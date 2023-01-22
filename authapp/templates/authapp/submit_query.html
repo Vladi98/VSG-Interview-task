@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% block title %}Edit{% endblock title %}
+{% block content %}
+<h2>Submit a query</h2>
+<p>Welcome {{user.username}}! Click Submit to make a request to <i>jikan.moe</i></p>
+{% comment %} <a href="{% url 'authapp:submit_query' %}" class="btn btn-primary">Fetch animes data</a> {% endcomment %}
+<form action="{% url 'authapp:submit_query' %}" method="POST">
+    {% csrf_token %}
+    <label for="title">Write a valid anime title or leave empty to view all animes:  </label>
+    <input id="title" type="text" name="title" value="{{name}}">
+    <input type="submit" value="Submit">
+</form>
+{% endblock content %}
