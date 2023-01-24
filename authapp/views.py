@@ -40,9 +40,9 @@ def edit(request):
         if user_form.is_valid():
             user_form.save()
     else:
-    context = {
-        'form': user_form,
-    }
+        context = {
+            'form': user_form,
+        }
     return render(request, 'authapp/edit.html', context=context)
 
 @login_required
@@ -53,33 +53,32 @@ def get_anime(request):
     return render(request, 'authapp/submit_query.html', context=context)
 
 def submit_query(request):
-    if request.method == 'POST':
-        context = []
-        request_id = ''
-        url = 'https://api.jikan.moe/v4/anime/'
-        is_typed = request.POST.get('title', '')
+    context = []
+    request_id = ''
+    url = 'https://api.jikan.moe/v4/anime/'
+    is_typed = request.POST.get('title', '')
 
-        resp = requests.get(url)
-        items = resp.json().get('data', '')
-        if is_typed:
-            for item in items:
-                if item['title'] == is_typed:
-                    request_id = item['mal_id']
-                    url += str(request_id)
-                    resp = requests.get(url).json().get('data', '')
-                    items = [resp]
-                    break
-                
-        if items:
-            for e in items:
-                context.append({
-                    "title": e['title'],
-                    "image_url": e['images']['jpg']['image_url'],
-                    "title_english": e['title_english'],
-                    "type": e["type"],
-                    "source": e["source"],
-                    "episodes": e['episodes'],
-                    "status": e["status"],
-                    "airing": e['airing']
-                })
-            return render(request, 'authapp/jikan.html', {'context': context})
+    resp = requests.get(url)
+    items = resp.json().get('data', '')
+    if is_typed:
+        for item in items:
+            if item['title'] == is_typed:
+                request_id = item['mal_id']
+                url += str(request_id)
+                resp = requests.get(url).json().get('data', '')
+                items = [resp]
+                break
+            
+    if items:
+        for e in items:
+            context.append({
+                "title": e['title'],
+                "image_url": e['images']['jpg']['image_url'],
+                "title_english": e['title_english'],
+                "type": e["type"],
+                "source": e["source"],
+                "episodes": e['episodes'],
+                "status": e["status"],
+                "airing": e['airing']
+            })
+    return render(request, 'authapp/jikan.html', {'context': context})
